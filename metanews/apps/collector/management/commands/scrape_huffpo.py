@@ -1,25 +1,31 @@
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
-from metanews.apps.collector.models import Author, Copy
+from metanews.apps.collector.models import Author, Copy, Organization
 from BeautifulSoup import BeautifulSoup
 import requests
 
 
 def create_copy(author, url, content):
-    copy, created = Copy.objects.get_or_create(url=url, slug=slugify(url))
+    copy, created = Copy.objects.get_or_create(url=url)
     copy.text = content
     copy.save()
     author.copy.add(copy)
 
+def clean_link(url):
+    url = url.split("#")[0]
+    url = url.split("?")[0]
+    return url
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        org, created = Organization.objects.get_or_create(name="The Huffington Post")
         frontpage = requests.get("http://www.huffingtonpost.com/").content
         soup = BeautifulSoup(frontpage)
         divOInterest = soup.findAll("div", {"id": "center_entries"})
         links = divOInterest[0].findAll("a")
         for link in links:
-            url = link['href']
+            url = clean_link(link['href'])
             if len(url.split("http://")) > 1:
                 fn = slugify(url)
                 print "getting url = %s" % url
@@ -39,11 +45,11 @@ class Command(BaseCommand):
                         for nm in name.split(' and '):
                             nslug = slugify(nm)
                             print nslug
-                            au, created = Author.objects.get_or_create(slug=nslug, name=nm)
+                            au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=nm)
                             au.save()
                             create_copy(au, url, content)
                     else:
                         nslug = slugify(name)
                         print nslug
-                        au, created = Author.objects.get_or_create(slug=nslug, name=name)
+                        au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=name)
                         create_copy(au, url, content)

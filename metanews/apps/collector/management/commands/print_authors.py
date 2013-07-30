@@ -7,4 +7,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for au in Author.objects.all():
             sex = au.get_sex()
-            print "%s %s" % (au.name, sex)
+            urls = map(lambda x: x.url, au.copy.all())
+            print "%s %s %s" % (au.name, sex, au.copy.all().count())
