@@ -12,7 +12,7 @@ class Organization(models.Model):
         return self.name
 
 
-class Copy(models.Model):
+class Article(models.Model):
     url = models.URLField()
     text = models.TextField(blank=True, null=True)
     date_scraped = models.DateTimeField(auto_now_add=True)
@@ -27,7 +27,7 @@ class Author(models.Model):
     name = models.CharField(max_length=512)
     slug = AutoSlugField(populate_from=('name', ), overwrite=True)
     sex = models.CharField(max_length=1, choices=SEXES)
-    copy = models.ManyToManyField(Copy, blank=True, null=True,)
+    articles = models.ManyToManyField(Article, blank=True, null=True,)
     date_created = models.DateTimeField(auto_now_add=True)
     organization = models.ForeignKey(Organization, blank=True, null=True)
 

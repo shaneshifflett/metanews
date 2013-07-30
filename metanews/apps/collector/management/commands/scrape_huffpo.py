@@ -1,15 +1,15 @@
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
-from metanews.apps.collector.models import Author, Copy, Organization
+from metanews.apps.collector.models import Author, Article, Organization
 from BeautifulSoup import BeautifulSoup
 import requests
 
 
 def create_copy(author, url, content):
-    copy, created = Copy.objects.get_or_create(url=url)
+    copy, created = Article.objects.get_or_create(url=url)
     copy.text = content
     copy.save()
-    author.copy.add(copy)
+    author.articles.add(copy)
 
 def clean_link(url):
     url = url.split("#")[0]
