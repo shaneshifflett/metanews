@@ -1,0 +1,5 @@
+beautifulsoup
+django-extensions
+mysql-python
+requests
+nltk
