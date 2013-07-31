@@ -17,11 +17,11 @@ class genderPredictor():
         featureset = list()
         for nameTuple in maleNames:
             features = self._nameFeatures(nameTuple[0])
-            featureset.append((features,'M'))
+            featureset.append((features,'male'))
         
         for nameTuple in femaleNames:
             features = self._nameFeatures(nameTuple[0])
-            featureset.append((features,'F'))
+            featureset.append((features,'female'))
     
         return featureset
     

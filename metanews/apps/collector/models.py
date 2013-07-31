@@ -39,5 +39,7 @@ class Author(models.Model):
         try:
             result = gender[name[0]]
         except KeyError:
+            gp = genderPredictor()
+            gp.trainAndTest()
             result = gp.classify(name[0])
         return result
