@@ -1,3 +1,4 @@
+django
 beautifulsoup
 django-extensions
 mysql-python
