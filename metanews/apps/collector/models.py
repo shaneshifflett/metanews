@@ -32,6 +32,9 @@ class Author(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     organization = models.ForeignKey(Organization, blank=True, null=True)
 
+    def get_article_count(self):
+        return self.articles.count()
+
     def get_name_parts(self):
         return self.name.split(' ')
 

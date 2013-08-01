@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block content %}
+	<table>
+		<tr>
+			<td>Name</td>
+			<td>Gender</td>
+			<td>Confidence</td>
+			<td>Article Count</td>
+		</tr>
+		{% for au in author_list %}
+			<tr>
+				<td><a href="{% url 'author_detail' slug=au.slug %}">{{ au.name }}</a></td>
+				<td>{{au.get_sex}}</td>
+				<td>{{au.sex_confidence}}</td>
+				<td>{{au.get_article_count}}</td>
+			</tr>
+		{% endfor %}
+{% endblock %}

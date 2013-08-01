@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block content %}
+    {{author.name}} {{author.get_sex}}
+    <br/>
+    {% for article in author.articles.all %}
+    	<a href="{{article.url}}">{{article.url}}</a></br>
+    {% endfor %}
+{% endblock %}
