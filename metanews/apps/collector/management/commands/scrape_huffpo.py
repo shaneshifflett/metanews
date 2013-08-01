@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from metanews.apps.collector.models import Author, Article, Organization
 from BeautifulSoup import BeautifulSoup
+import itertools
 import requests
 
 
@@ -23,7 +24,8 @@ class Command(BaseCommand):
         frontpage = requests.get("http://www.huffingtonpost.com/").content
         soup = BeautifulSoup(frontpage)
         divOInterest = soup.findAll("div", {"id": "center_entries"})
-        links = divOInterest[0].findAll("a")
+        splash = soup.findAll("div", {"id": "top_featured_news"})
+        links = itertools.chain(divOInterest[0].findAll("a"), splash[0].findAll("a"))
         for link in links:
             url = clean_link(link['href'])
             if len(url.split("http://")) > 1:
