@@ -7,6 +7,8 @@
 			<td>Gender</td>
 			<td>Confidence</td>
 			<td>Article Count</td>
+			<td>Splashed Articles</td>
+			<td>Front Page Articles</td>
 		</tr>
 		{% for au in author_list %}
 			<tr>
@@ -14,6 +16,8 @@
 				<td>{{au.get_sex}}</td>
 				<td>{{au.sex_confidence}}</td>
 				<td>{{au.get_article_count}}</td>
+				<td>{{au.get_splashed_article_count}}</td>
+				<td>{{au.get_front_article_count}}</td>
 			</tr>
 		{% endfor %}
 {% endblock %}

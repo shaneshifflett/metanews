@@ -13,10 +13,22 @@ class Organization(models.Model):
 
 
 class Article(models.Model):
+    PLACES = (
+        ('0', 'splash'),
+        ('1', 'front'),
+        ('2', 'listview')
+    )
     url = models.URLField()
     text = models.TextField(blank=True, null=True)
     date_scraped = models.DateTimeField(auto_now_add=True)
     slug = AutoSlugField(populate_from=('url', ), overwrite=True)
+    featured_at = models.CharField(max_length=1, choices=PLACES, blank=True, null=True, default="1")
+
+    def featured_where(self):
+        for place in self.PLACES:
+            if place[0] == self.featured_at:
+                return place[1]
+        return ""
 
 
 class Author(models.Model):
@@ -34,6 +46,12 @@ class Author(models.Model):
 
     def get_article_count(self):
         return self.articles.count()
+
+    def get_splashed_article_count(self):
+        return self.articles.filter(featured_at="0").count()
+
+    def get_front_article_count(self):
+        return self.articles.filter(featured_at="1").count()
 
     def get_name_parts(self):
         return self.name.split(' ')
