@@ -8,11 +8,12 @@
     		<td>URL</td>
     		<td>Featured at</td>
     	</tr>
-    	<tr>
 	    {% for article in author.articles.all %}
+    	<tr>
 	    	<td><a href="{{article.url}}">{{article.url}}</a></td>
 	    	<td>{{article.featured_where}}</td>
-	    {% endfor %}
 		</tr>
-	</table>
+	    {% endfor %}
+	</table
+
 {% endblock %}
