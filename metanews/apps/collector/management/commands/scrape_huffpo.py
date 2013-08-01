@@ -4,6 +4,9 @@ from metanews.apps.collector.models import Author, Article, Organization
 from BeautifulSoup import BeautifulSoup
 import itertools
 import requests
+from django.conf import settings
+
+print settings.SITE_ROOT
 
 org, created = Organization.objects.get_or_create(name="The Huffington Post")
 
@@ -26,11 +29,11 @@ def do_work(links, place):
             fn = slugify(url)
             print "getting url = %s" % url
             try:
-                with open("data/scrapes/huffpo/"+fn, "rb") as f:
+                with open(settings.SITE_ROOT+"/data/scrapes/huffpo/"+fn, "rb") as f:
                     content = f.read()
             except IOError:
                 page = requests.get(url)
-                with open("data/scrapes/huffpo/"+fn, "wb") as f:
+                with open(settings.SITE_ROOT+"/data/scrapes/huffpo/"+fn, "wb") as f:
                     f.write(page.content)
                     content = page.content
             pagesoup = BeautifulSoup(content)
