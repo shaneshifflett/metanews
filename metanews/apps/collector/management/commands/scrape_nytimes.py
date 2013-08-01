@@ -5,13 +5,16 @@ from BeautifulSoup import BeautifulSoup
 import itertools
 import requests
 
-org, created = Organization.objects.get_or_create(name="The Huffington Post")
+org, created = Organization.objects.get_or_create(name="The New York Times")
 
 def create_copy(author, url, content, place):
     copy, created = Article.objects.get_or_create(url=url)
     copy.text = content
     copy.featured_at = place
-    copy.save()
+    try:
+        copy.save()
+    except Exception as e:
+        import pdb; pdb.set_trace()
     author.articles.add(copy)
 
 def clean_link(url):
@@ -26,11 +29,11 @@ def do_work(links, place):
             fn = slugify(url)
             print "getting url = %s" % url
             try:
-                with open("data/scrapes/huffpo/"+fn, "rb") as f:
+                with open("data/scrapes/nytimes/"+fn, "rb") as f:
                     content = f.read()
             except IOError:
                 page = requests.get(url)
-                with open("data/scrapes/huffpo/"+fn, "wb") as f:
+                with open("data/scrapes/nytimes/"+fn, "wb") as f:
                     f.write(page.content)
                     content = page.content
             pagesoup = BeautifulSoup(content)
@@ -53,9 +56,23 @@ def do_work(links, place):
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        frontpage = requests.get("http://www.huffingtonpost.com/").content
+        year = args[0]
+        month = args[1]
+        day = args[2]
+        #use whowritesfor as a proxy for now
+        frontpage = requests.get("http://whowritesfor.com/"+year+"/"+month+"/"+day).content
         soup = BeautifulSoup(frontpage)
-        divOInterest = soup.findAll("div", {"id": "center_entries"})
-        splash = soup.findAll("div", {"id": "top_featured_news"})
-        do_work(divOInterest[0].findAll("a"), 1)
-        do_work(splash[0].findAll("a"), 0)
+        sexes = ['men', 'women']
+        for sex in sexes:
+            men = soup.findAll("div", {"class": sex})
+            men_articles = men[0].findAll("div", {"class": "article"})
+            for article in men_articles:
+                name = article.find("h3").text
+                nslug = slugify(name)
+                url = clean_link(article.find("a")['href'])
+                print "%s %s" % (nslug, url)
+                content = requests.get(url).content
+                au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=name)
+                create_copy(au, url, content, "1")
+
+            

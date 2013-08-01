@@ -3,6 +3,17 @@
 {% block content %}
 	<table>
 		<tr>
+			<td>{{org.name}}</td>
+		</tr>
+		<tr>
+			<td>female: {{org.get_male_count}}</td>
+		</tr>
+		<tr>
+			<td>male: {{org.get_female_count}}</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
 			<td>Name</td>
 			<td>Gender</td>
 			<td>Confidence</td>

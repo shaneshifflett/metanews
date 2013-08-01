@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block content %}
+	<table>
+		<tr>
+			<td>Name</td>
+			<td>Male writers</td>
+			<td>Female writers</td>
+		</tr>
+		{% for org in organization_list %}
+			<tr>
+				<td><a href="{% url 'author_list' slug=org.slug %}">{{ org.name }}</a></td>
+				<td>{{org.get_male_count}}</td>
+				<td>{{org.get_female_count}}</td>
+			</tr>
+		{% endfor %}
+{% endblock %}

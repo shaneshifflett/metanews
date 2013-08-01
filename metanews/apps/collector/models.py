@@ -11,6 +11,12 @@ class Organization(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_male_count(self):
+        return Author.objects.filter(organization=self, sex="M").count()
+
+    def get_female_count(self):
+        return Author.objects.filter(organization=self, sex="F").count()
+
 
 class Article(models.Model):
     PLACES = (
