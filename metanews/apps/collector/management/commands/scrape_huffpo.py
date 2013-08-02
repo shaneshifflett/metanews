@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from metanews.apps.collector.models import Author, Article, Organization
+from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 import itertools
 import requests
@@ -27,7 +28,7 @@ def do_work(links, place):
         url = clean_link(link['href'])
         if len(url.split("http://")) > 1:
             fn = slugify(url)
-            print "getting url = %s" % url
+            print "getting url = %s @ %s" % (url, datetime.now())
             try:
                 with open(settings.SITE_ROOT+"/data/scrapes/huffpo/"+fn, "rb") as f:
                     content = f.read()
