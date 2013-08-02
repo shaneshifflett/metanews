@@ -44,15 +44,30 @@ def do_work(links, place):
                 if len(name.split(' and ')) > 1:
                     for nm in name.split(' and '):
                         nslug = slugify(nm)
-                        print nslug
                         au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=nm)
                         au.save()
                         create_copy(au, url, content, place)
                 else:
                     nslug = slugify(name)
-                    print nslug
                     au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=name)
                     create_copy(au, url, content, place)
+            else:
+                byline = pagesoup.findAll("a", {"rel": "author"})
+                for by in byline:
+                    name = by.text
+                    nslug = slugify(name)
+                    au, created = Author.objects.get_or_create(organization=org, slug=nslug, name=name)
+                    create_copy(au, url, content, place)
+def test_cases():
+    do_work([{'href': 'http://www.huffingtonpost.com/2013/08/01/climate-change-and-violence_n_3692023.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/02/july-jobs-report-unemployment-rate_n_3690424.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/01/larry-summers-janet-yellen_n_3691052.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/01/larry-arnn-dark-ones-hillsdale_n_3691839.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/02/brian-williams-knee-replacement-surgery-temporary-medical-leave_n_3694732.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/01/colin-powell-affair_n_3691734.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/02/emily-gilbert-bob-filner_n_3695147.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/02/john-oliver-fast-food-workers_n_3695136.html'},
+    {'href': 'http://www.huffingtonpost.com/2013/08/02/new-york-ag-big-bank-probe_n_3692564.html'}], 1)
 
 class Command(BaseCommand):
 
@@ -63,3 +78,5 @@ class Command(BaseCommand):
         splash = soup.findAll("div", {"id": "top_featured_news"})
         do_work(divOInterest[0].findAll("a"), 1)
         do_work(splash[0].findAll("a"), 0)
+        #test_cases()
+
