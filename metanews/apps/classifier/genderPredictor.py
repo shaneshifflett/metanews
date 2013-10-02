@@ -59,7 +59,7 @@ class genderPredictor():
         
     def _nameFeatures(self,name):
         name=name.upper()
-        try
+        try:
             return {
                 'last_letter': name[-1],
                 'last_two' : name[-2:],
