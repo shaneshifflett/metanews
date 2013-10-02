@@ -59,11 +59,19 @@ class genderPredictor():
         
     def _nameFeatures(self,name):
         name=name.upper()
-        return {
-            'last_letter': name[-1],
-            'last_two' : name[-2:],
-            'last_is_vowel' : (name[-1] in 'AEIOUY')
-        }
+        try
+            return {
+                'last_letter': name[-1],
+                'last_two' : name[-2:],
+                'last_is_vowel' : (name[-1] in 'AEIOUY')
+            }
+        except Exception as e:
+            print e
+            return {
+                'last_letter': '',
+                'last_two': '',
+                'last_is_vowel': False
+            }
 
 if __name__ == "__main__":
     gp = genderPredictor()
