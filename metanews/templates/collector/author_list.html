@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% block content %}
-	<table>
+	{{org.name}}
+	<table style='width:1080px'>
 		<tr>
-			<td>{{org.name}}</td>
+			<td>Male articles on front</td>
+			<td>Female articles on front</td>
+			<td>Male writers count</td>
+			<td>Female writers count</td>
 		</tr>
 		<tr>
-			<td>male: {{org.get_male_count}}</td>
-		</tr>
-		<tr>
-			<td>female: {{org.get_female_count}}</td>
+			<td>{{org.get_male_front_articles}}</td>
+			<td>{{org.get_female_front_articles}}</td>
+			<td>{{org.get_male_count}}</td>
+			<td>{{org.get_female_count}}</td>
 		</tr>
 	</table>
-	<table>
+	<table style='width:1080px'>
 		<tr>
 			<td>Name</td>
 			<td>Gender</td>

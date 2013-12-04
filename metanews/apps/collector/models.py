@@ -4,6 +4,10 @@ from metanews.apps.classifier.genderPredictor import genderPredictor
 from metanews.apps.classifier.gender import gender
 
 
+gp = genderPredictor()
+conf = gp.trainAndTest()
+print 'setting gp and conf'
+
 class Organization(models.Model):
     name = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from=('name', ), overwrite=True)
@@ -16,6 +20,20 @@ class Organization(models.Model):
 
     def get_female_count(self):
         return Author.objects.filter(organization=self, sex="F").count()
+
+    def get_male_front_articles(self):
+        front_splashes = 0
+        auths = Author.objects.filter(organization=self, sex="M")
+        for auth in auths:
+            front_splashes += auth.articles.filter(featured_at=1).count()
+        return front_splashes
+
+    def get_female_front_articles(self):
+        front_splashes = 0
+        auths = Author.objects.filter(organization=self, sex="F")
+        for auth in auths:
+            front_splashes += auth.articles.filter(featured_at=1).count()
+        return front_splashes
 
 
 class Article(models.Model):
@@ -67,8 +85,6 @@ class Author(models.Model):
         try:
             result = gender[name[0]]
         except KeyError:
-            gp = genderPredictor()
-            conf = gp.trainAndTest()
             result = gp.classify(name[0])
             self.sex_confidence = conf
         self.sex = self.SEXES[0][0] if result == 'male' else self.SEXES[1][0]
